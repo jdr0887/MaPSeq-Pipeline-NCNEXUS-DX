@@ -23,7 +23,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import edu.unc.mapseq.config.MaPSeqConfigurationService;
 import edu.unc.mapseq.dao.MaPSeqDAOBeanService;
 
-@Command(scope = "ncgenes-dx", name = "run-workflow", description = "Run NCGenes DX Workflow")
+@Command(scope = "ncnexus-dx", name = "run-workflow", description = "Run NCNEXUS DX Workflow")
 @Service
 public class RunWorkflowAction implements Action {
 
@@ -54,7 +54,7 @@ public class RunWorkflowAction implements Action {
         try {
             connection = connectionFactory.createConnection();
             session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            Destination destination = session.createQueue("queue/ncgenes.dx");
+            Destination destination = session.createQueue("queue/ncnexus.dx");
             MessageProducer producer = session.createProducer(destination);
             producer.setDeliveryMode(DeliveryMode.PERSISTENT);
             StringWriter sw = new StringWriter();

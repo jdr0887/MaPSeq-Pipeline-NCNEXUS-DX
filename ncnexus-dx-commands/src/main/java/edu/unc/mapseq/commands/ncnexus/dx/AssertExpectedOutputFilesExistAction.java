@@ -15,7 +15,7 @@ import edu.unc.mapseq.commons.ncnexus.dx.AssertExpectedOutputFilesExistRunnable;
 import edu.unc.mapseq.dao.MaPSeqDAOBeanService;
 import edu.unc.mapseq.dao.model.Sample;
 
-@Command(scope = "ncgenes-dx", name = "assert-expected-output-files-exist")
+@Command(scope = "ncnexus-dx", name = "assert-expected-output-files-exist")
 @Service
 public class AssertExpectedOutputFilesExistAction implements Action {
 

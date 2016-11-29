@@ -19,7 +19,7 @@ import edu.unc.mapseq.dao.model.Workflow;
 import edu.unc.mapseq.dao.model.WorkflowRunAttempt;
 import edu.unc.mapseq.dao.model.WorkflowRunAttemptStatusType;
 
-@Command(scope = "ncgenes-dx", name = "register-all-to-irods", description = "Register all WorkflowRunAttempts to iRODS")
+@Command(scope = "ncnexus-dx", name = "register-all-to-irods", description = "Register all WorkflowRunAttempts to iRODS")
 @Service
 public class RegisterAllToIRODSAction implements Action {
 

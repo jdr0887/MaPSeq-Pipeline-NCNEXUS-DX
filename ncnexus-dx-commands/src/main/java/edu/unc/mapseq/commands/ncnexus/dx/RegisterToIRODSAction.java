@@ -15,7 +15,7 @@ import edu.unc.mapseq.commons.ncnexus.dx.RegisterToIRODSRunnable;
 import edu.unc.mapseq.dao.MaPSeqDAOBeanService;
 import edu.unc.mapseq.dao.model.WorkflowRunAttempt;
 
-@Command(scope = "ncgenes-dx", name = "register-to-irods", description = "Register a NCGenesDX sample output to iRODS")
+@Command(scope = "ncnexus-dx", name = "register-to-irods", description = "Register a NCGenesDX sample output to iRODS")
 @Service
 public class RegisterToIRODSAction implements Action {
 

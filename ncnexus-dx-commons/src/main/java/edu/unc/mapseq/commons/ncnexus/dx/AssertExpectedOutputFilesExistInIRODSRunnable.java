@@ -46,7 +46,7 @@ public class AssertExpectedOutputFilesExistInIRODSRunnable implements Runnable {
 
         Workflow workflow = null;
         try {
-            workflow = maPSeqDAOBeanService.getWorkflowDAO().findByName("NCGenesDX").get(0);
+            workflow = maPSeqDAOBeanService.getWorkflowDAO().findByName("NCNEXUSDX").get(0);
         } catch (MaPSeqDAOException e1) {
             e1.printStackTrace();
         }
@@ -57,7 +57,7 @@ public class AssertExpectedOutputFilesExistInIRODSRunnable implements Runnable {
             tmpDir.mkdirs();
         }
 
-        String irodsDirectory = String.format("/MedGenZone/%s/sequencing/ncgenes/analysis/%s/L%03d_%s/%s/%s",
+        String irodsDirectory = String.format("/MedGenZone/%s/sequencing/ncnexus/analysis/%s/L%03d_%s/%s/%s",
                 workflow.getSystem().getValue(), sample.getFlowcell().getName(), sample.getLaneIndex(), sample.getBarcode(),
                 workflow.getName(), version);
 

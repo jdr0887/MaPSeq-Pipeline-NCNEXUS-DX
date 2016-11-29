@@ -37,7 +37,7 @@ public class AssertExpectedOutputFilesExistRunnable implements Runnable {
         logger.debug("ENTERING run()");
         Workflow workflow = null;
         try {
-            workflow = maPSeqDAOBeanService.getWorkflowDAO().findByName("NCGenesDX").get(0);
+            workflow = maPSeqDAOBeanService.getWorkflowDAO().findByName("NCNEXUSDX").get(0);
         } catch (MaPSeqDAOException e1) {
             e1.printStackTrace();
         }

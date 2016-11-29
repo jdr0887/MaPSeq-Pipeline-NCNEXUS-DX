@@ -15,7 +15,7 @@ import edu.unc.mapseq.commons.ncnexus.dx.AssertExpectedOutputFilesExistInIRODSRu
 import edu.unc.mapseq.dao.MaPSeqDAOBeanService;
 import edu.unc.mapseq.dao.model.Sample;
 
-@Command(scope = "ncgenes-dx", name = "assert-expected-output-files-exist-in-irods")
+@Command(scope = "ncnexus-dx", name = "assert-expected-output-files-exist-in-irods")
 @Service
 public class AssertExpectedOutputFilesExistInIRODSAction implements Action {
 
