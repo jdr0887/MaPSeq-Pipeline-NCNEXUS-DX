@@ -77,7 +77,7 @@ public class NCNEXUSDXWorkflow extends AbstractSequencingWorkflow {
         Boolean isIncidental = Boolean.FALSE;
         Workflow ncnexusWorkflow = null;
         try {
-            ncnexusWorkflow = getWorkflowBeanService().getMaPSeqDAOBeanService().getWorkflowDAO().findByName("NCGenesBaseline").get(0);
+            ncnexusWorkflow = getWorkflowBeanService().getMaPSeqDAOBeanService().getWorkflowDAO().findByName("NCNEXUSBaseline").get(0);
         } catch (MaPSeqDAOException e1) {
             e1.printStackTrace();
         }
