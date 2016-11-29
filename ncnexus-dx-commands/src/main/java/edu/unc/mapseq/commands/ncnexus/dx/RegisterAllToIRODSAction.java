@@ -33,10 +33,10 @@ public class RegisterAllToIRODSAction implements Action {
         logger.debug("ENTERING execute()");
         try {
             ExecutorService es = Executors.newFixedThreadPool(2);
-            List<Workflow> foundWorkflows = maPSeqDAOBeanService.getWorkflowDAO().findByName("NCGenesDX");
+            List<Workflow> foundWorkflows = maPSeqDAOBeanService.getWorkflowDAO().findByName("NCNEXUSDX");
 
             if (CollectionUtils.isEmpty(foundWorkflows)) {
-                logger.warn("No workflows found...looking for NCGenesDX");
+                logger.warn("No workflows found...looking for NCNEXUSDX");
                 return null;
             }
 
@@ -45,7 +45,7 @@ public class RegisterAllToIRODSAction implements Action {
                         .findByWorkflowId(workflow.getId());
 
                 if (CollectionUtils.isEmpty(workflowRunAttemptList)) {
-                    logger.warn("No WorkflowRunAttempts found for NCGenesDX");
+                    logger.warn("No WorkflowRunAttempts found for NCNEXUSDX");
                     return null;
                 }
 

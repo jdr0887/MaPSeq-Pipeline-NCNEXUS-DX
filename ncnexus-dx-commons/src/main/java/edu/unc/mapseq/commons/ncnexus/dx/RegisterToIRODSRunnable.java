@@ -259,7 +259,7 @@ public class RegisterToIRODSRunnable implements Runnable {
                     commandInput.setExitImmediately(Boolean.FALSE);
                     sb = new StringBuilder();
                     for (ImmutablePair<String, String> attribute : bean.getAttributes()) {
-                        sb.append(String.format("$IRODS_HOME/imeta add -d %s/%s %s %s NCGenesDX%n", irodsDirectory, bean.getFile().getName(),
+                        sb.append(String.format("$IRODS_HOME/imeta add -d %s/%s %s %s NCNEXUSDX%n", irodsDirectory, bean.getFile().getName(),
                                 attribute.getLeft(), attribute.getRight()));
                     }
                     commandInput.setCommand(sb.toString());
