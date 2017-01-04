@@ -7,6 +7,7 @@
       <cm:property name="corePoolSize" value="100" />
       <cm:property name="maxPoolSize" value="100" />
       <cm:property name="siteName" value="Hatteras" />
+      <cm:property name="subjectMergeHome" value="/projects/sequence_analysis/medgenwork/prod/NCNEXUS/subject-merge" />
       <cm:property name="referenceSequence" value="$NCNEXUSDX_REFERENCES_DIRECTORY/BUILD.37.1/bwa061sam0118/BUILD.37.1.sorted.shortid.fa" />
       <cm:property name="icSNPIntervalList" value="$NCNEXUSDX_RESOURCES_DIRECTORY/ncgenes/ic_snp_v2.list" />
     </cm:default-properties>
@@ -22,6 +23,7 @@
     <property name="maPSeqDAOBeanService" ref="maPSeqDAOBeanService" />
     <property name="attributes">
       <map>
+        <entry key="subjectMergeHome" value="${subjectMergeHome}" />
         <entry key="referenceSequence" value="${referenceSequence}" />
         <entry key="icSNPIntervalList" value="${icSNPIntervalList}" />
         <entry key="siteName" value="${siteName}" />
