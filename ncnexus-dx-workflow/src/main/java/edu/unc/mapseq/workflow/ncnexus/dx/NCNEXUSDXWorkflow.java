@@ -237,8 +237,8 @@ public class NCNEXUSDXWorkflow extends AbstractSequencingWorkflow {
             logger.info(zipJob.toString());
             graph.addVertex(zipJob);
             graph.addEdge(picardSortSAMJob, zipJob);
-
-            File vcf = new File(bamFile.getParentFile(), bamFile.getName().replace(".bam", ".sorted.va.vcf"));
+            
+            File vcf = new File(subjectDirectory, bamFile.getName().replace(".bam", ".filtered.srd.ps.va.vcf"));
             // new job
             builder = SequencingWorkflowJobFactory.createJob(++count, FilterVariantCLI.class, attempt.getId()).siteName(siteName);
             File filterVariantOutput = new File(outputDirectory,
