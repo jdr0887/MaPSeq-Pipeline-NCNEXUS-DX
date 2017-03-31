@@ -27,6 +27,7 @@ import edu.unc.mapseq.dao.model.Attribute;
 import edu.unc.mapseq.dao.model.Sample;
 import edu.unc.mapseq.dao.model.WorkflowRun;
 import edu.unc.mapseq.dao.model.WorkflowRunAttempt;
+import edu.unc.mapseq.module.core.RemoveCLI;
 import edu.unc.mapseq.module.core.ZipCLI;
 import edu.unc.mapseq.module.sequencing.filter.FilterVariantCLI;
 import edu.unc.mapseq.module.sequencing.picard.PicardSortOrderType;
@@ -34,6 +35,7 @@ import edu.unc.mapseq.module.sequencing.picard2.PicardCollectHsMetricsCLI;
 import edu.unc.mapseq.module.sequencing.picard2.PicardSortSAMCLI;
 import edu.unc.mapseq.module.sequencing.picard2.PicardViewSAMCLI;
 import edu.unc.mapseq.workflow.WorkflowException;
+import edu.unc.mapseq.workflow.core.WorkflowJobFactory;
 import edu.unc.mapseq.workflow.sequencing.AbstractSequencingWorkflow;
 import edu.unc.mapseq.workflow.sequencing.SequencingWorkflowJobFactory;
 import edu.unc.mapseq.workflow.sequencing.SequencingWorkflowUtil;
@@ -231,13 +233,13 @@ public class NCNEXUSDXWorkflow extends AbstractSequencingWorkflow {
             // new job
             builder = SequencingWorkflowJobFactory.createJob(++count, ZipCLI.class, attempt.getId()).siteName(siteName);
             File zipOutputFile = new File(outputDirectory, picardSortSAMOutput.getName().replace(".bam", ".zip"));
-            builder.addArgument(ZipCLI.ENTRY, picardSortSAMOutput.getAbsolutePath())
+            builder.addArgument(ZipCLI.WORKDIR, outputDirectory.getAbsolutePath()).addArgument(ZipCLI.ENTRY, picardSortSAMOutput.getAbsolutePath())
                     .addArgument(ZipCLI.ENTRY, picardSortSAMIndexOut.getAbsolutePath()).addArgument(ZipCLI.OUTPUT, zipOutputFile.getAbsolutePath());
             CondorJob zipJob = builder.build();
             logger.info(zipJob.toString());
             graph.addVertex(zipJob);
             graph.addEdge(picardSortSAMJob, zipJob);
-            
+
             File vcf = new File(subjectDirectory, bamFile.getName().replace(".bam", ".filtered.srd.ps.va.vcf"));
             // new job
             builder = SequencingWorkflowJobFactory.createJob(++count, FilterVariantCLI.class, attempt.getId()).siteName(siteName);
@@ -249,6 +251,15 @@ public class NCNEXUSDXWorkflow extends AbstractSequencingWorkflow {
             CondorJob filterVariantJob = builder.build();
             logger.info(filterVariantJob.toString());
             graph.addVertex(filterVariantJob);
+
+            // new job
+            builder = WorkflowJobFactory.createJob(++count, RemoveCLI.class, attempt.getId()).siteName(siteName);
+            builder.addArgument(RemoveCLI.FILE, picardViewSAMOutput.getAbsolutePath());
+            CondorJob removeJob = builder.build();
+            logger.info(removeJob.toString());
+            graph.addVertex(removeJob);
+            graph.addEdge(zipJob, removeJob);
+            graph.addEdge(filterVariantJob, removeJob);
 
         } catch (Exception e) {
             throw new WorkflowException(e);
