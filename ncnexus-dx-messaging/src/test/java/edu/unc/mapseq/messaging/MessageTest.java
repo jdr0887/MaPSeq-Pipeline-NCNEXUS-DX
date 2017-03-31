@@ -1,5 +1,8 @@
 package edu.unc.mapseq.messaging;
 
+import java.io.IOException;
+import java.io.StringWriter;
+
 import javax.jms.Connection;
 import javax.jms.DeliveryMode;
 import javax.jms.Destination;
@@ -10,11 +13,14 @@ import javax.jms.Session;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.junit.Test;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+
 public class MessageTest {
 
     @Test
     public void testQueue() {
-        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(String.format("nio://%s:61616", "biodev2.its.unc.edu"));
+        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://152.54.3.109:61616");
 
         Connection connection = null;
         Session session = null;
@@ -25,11 +31,71 @@ public class MessageTest {
             MessageProducer producer = session.createProducer(destination);
             producer.setDeliveryMode(DeliveryMode.PERSISTENT);
 
-            String format = "{\"entities\":[{\"entityType\":\"Sample\",\"id\":\"%d\",\"attributes\":[{\"name\":\"GATKDepthOfCoverage.interval_list.version\",\"value\":\"%d\"},{\"name\":\"SAMToolsView.dx.id\",\"value\":\"%d\"}]},{\"entityType\":\"WorkflowRun\",\"name\":\"%s\"}]}";
+            StringWriter sw = new StringWriter();
 
-            producer.send(session.createTextMessage(String.format(format, 52422, 7, 5, "NCG_00009_V7_Dx5")));
+            JsonGenerator generator = new JsonFactory().createGenerator(sw);
 
-        } catch (JMSException e) {
+            generator.writeStartObject();
+            generator.writeArrayFieldStart("entities");
+
+            generator.writeStartObject();
+            generator.writeStringField("entityType", "Sample");
+            generator.writeStringField("id", "2624929");
+
+            generator.writeArrayFieldStart("attributes");
+
+            generator.writeStartObject();
+            generator.writeStringField("name", "subjectName");
+            generator.writeStringField("value", "NCX_00004");
+            generator.writeEndObject();
+
+            generator.writeEndArray();
+            generator.writeEndObject();
+
+            generator.writeStartObject();
+            generator.writeStringField("entityType", "Sample");
+            generator.writeStringField("id", "2624833");
+
+            generator.writeArrayFieldStart("attributes");
+
+            generator.writeStartObject();
+            generator.writeStringField("name", "subjectName");
+            generator.writeStringField("value", "NCX_00004");
+            generator.writeEndObject();
+
+            generator.writeEndArray();
+            generator.writeEndObject();
+
+            generator.writeStartObject();
+            generator.writeStringField("entityType", "WorkflowRun");
+            generator.writeStringField("name", "NCX_00004-ncnexus-dx-test-1");
+            generator.writeArrayFieldStart("attributes");
+
+            generator.writeStartObject();
+            generator.writeStringField("name", "list_version");
+            generator.writeStringField("value", "41");
+            generator.writeEndObject();
+
+            generator.writeStartObject();
+            generator.writeStringField("name", "dx_id");
+            generator.writeStringField("value", "1");
+            generator.writeEndObject();
+
+            generator.writeEndArray();
+            generator.writeEndObject();
+
+            generator.writeEndArray();
+            generator.writeEndObject();
+
+            generator.flush();
+            generator.close();
+
+            sw.flush();
+            sw.close();
+            System.out.println(sw.toString());
+            producer.send(session.createTextMessage(sw.toString()));
+
+        } catch (JMSException | IOException e) {
             e.printStackTrace();
         } finally {
             try {
@@ -39,7 +105,6 @@ public class MessageTest {
                 e.printStackTrace();
             }
         }
-
     }
 
 }
