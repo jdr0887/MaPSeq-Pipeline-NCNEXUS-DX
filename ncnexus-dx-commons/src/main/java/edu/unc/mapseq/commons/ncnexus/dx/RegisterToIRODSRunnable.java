@@ -77,10 +77,11 @@ public class RegisterToIRODSRunnable implements Runnable {
                 Iterator<Attribute> attributeIter = attributeSet.iterator();
                 while (attributeIter.hasNext()) {
                     Attribute attribute = attributeIter.next();
-                    if ("GATKDepthOfCoverage.interval_list.version".equals(attribute.getName())) {
+
+                    if ("list_version".equals(attribute.getName())) {
                         version = attribute.getValue();
                     }
-                    if ("SAMToolsView.dx.id".equals(attribute.getName())) {
+                    if ("dx_id".equals(attribute.getName())) {
                         dx = attribute.getValue();
                     }
                 }
