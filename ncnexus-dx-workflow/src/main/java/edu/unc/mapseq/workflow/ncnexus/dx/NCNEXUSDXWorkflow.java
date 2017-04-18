@@ -29,6 +29,7 @@ import edu.unc.mapseq.dao.model.WorkflowRun;
 import edu.unc.mapseq.dao.model.WorkflowRunAttempt;
 import edu.unc.mapseq.module.core.RemoveCLI;
 import edu.unc.mapseq.module.core.ZipCLI;
+import edu.unc.mapseq.module.sequencing.converter.SAMToolsDepthToGATKDOCFormatConverterCLI;
 import edu.unc.mapseq.module.sequencing.filter.FilterVariantCLI;
 import edu.unc.mapseq.module.sequencing.picard.PicardSortOrderType;
 import edu.unc.mapseq.module.sequencing.picard2.PicardCollectHsMetricsCLI;
@@ -128,11 +129,18 @@ public class NCNEXUSDXWorkflow extends AbstractSequencingWorkflow {
             dataDirectory = "/projects/mapseq/data";
         }
 
+        File allIntervalsFile = new File(
+                String.format("%1$s/resources/annotation/abeast/NCNEXUS/all/allintervals.v%2$s.txt", dataDirectory, listVersion));
+        if (!allIntervalsFile.exists()) {
+            throw new WorkflowException("allIntervalsFile does not exist: " + allIntervalsFile.getAbsolutePath());
+        }
+
         File versionedExonsIntervalListFile = new File(
                 String.format("%1$s/resources/annotation/abeast/NCNEXUS/%2$s/exons_pm_0_v%2$s.interval_list", dataDirectory, listVersion));
         if (!versionedExonsIntervalListFile.exists()) {
             throw new WorkflowException("Interval list file does not exist: " + versionedExonsIntervalListFile.getAbsolutePath());
         }
+
         File versionedExonsBedFile = new File(
                 String.format("%1$s/resources/annotation/abeast/NCNEXUS/%2$s/exons_pm_0_v%2$s.bed", dataDirectory, listVersion));
         if (!versionedExonsBedFile.exists()) {
@@ -206,6 +214,20 @@ public class NCNEXUSDXWorkflow extends AbstractSequencingWorkflow {
             CondorJob picardCollectHsMetricsJob = builder.build();
             logger.info(picardCollectHsMetricsJob.toString());
             graph.addVertex(picardCollectHsMetricsJob);
+
+            // new job
+            builder = SequencingWorkflowJobFactory.createJob(++count, SAMToolsDepthToGATKDOCFormatConverterCLI.class, attempt.getId())
+                    .siteName(siteName).numberOfProcessors(8);
+            File samtoolsDepthFile = new File(subjectDirectory, bamFile.getName().replace(".bam", ".depth.txt"));
+            File samtoolsDepthConvertedFile = new File(outputDirectory,
+                    bamFile.getName().replace(".bam", String.format(".depth.v%s.txt", listVersion)));
+            builder.addArgument(SAMToolsDepthToGATKDOCFormatConverterCLI.INPUT, samtoolsDepthFile.getAbsolutePath())
+                    .addArgument(SAMToolsDepthToGATKDOCFormatConverterCLI.OUTPUT, samtoolsDepthConvertedFile.getAbsolutePath())
+                    .addArgument(SAMToolsDepthToGATKDOCFormatConverterCLI.INTERVALS, allIntervalsFile.getAbsolutePath())
+                    .addArgument(SAMToolsDepthToGATKDOCFormatConverterCLI.THREADS, 8);
+            CondorJob samtoolsDepthToGATKDOCFormatConverterJob = builder.build();
+            logger.info(samtoolsDepthToGATKDOCFormatConverterJob.toString());
+            graph.addVertex(samtoolsDepthToGATKDOCFormatConverterJob);
 
             // new job
             builder = SequencingWorkflowJobFactory.createJob(++count, PicardViewSAMCLI.class, attempt.getId()).siteName(siteName);
