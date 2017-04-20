@@ -224,7 +224,7 @@ public class NCNEXUSDXWorkflow extends AbstractSequencingWorkflow {
             builder.addArgument(SAMToolsDepthToGATKDOCFormatConverterCLI.INPUT, samtoolsDepthFile.getAbsolutePath())
                     .addArgument(SAMToolsDepthToGATKDOCFormatConverterCLI.OUTPUT, samtoolsDepthConvertedFile.getAbsolutePath())
                     .addArgument(SAMToolsDepthToGATKDOCFormatConverterCLI.INTERVALS, allIntervalsFile.getAbsolutePath())
-                    .addArgument(SAMToolsDepthToGATKDOCFormatConverterCLI.THREADS, 16);
+                    .addArgument(SAMToolsDepthToGATKDOCFormatConverterCLI.THREADS, 8);
             CondorJob samtoolsDepthToGATKDOCFormatConverterJob = builder.build();
             logger.info(samtoolsDepthToGATKDOCFormatConverterJob.toString());
             graph.addVertex(samtoolsDepthToGATKDOCFormatConverterJob);
