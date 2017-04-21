@@ -217,14 +217,13 @@ public class NCNEXUSDXWorkflow extends AbstractSequencingWorkflow {
 
             // new job
             builder = SequencingWorkflowJobFactory.createJob(++count, SAMToolsDepthToGATKDOCFormatConverterCLI.class, attempt.getId())
-                    .siteName(siteName).numberOfProcessors(16);
+                    .siteName(siteName).numberOfProcessors(8);
             File samtoolsDepthFile = new File(subjectDirectory, bamFile.getName().replace(".bam", ".depth.txt"));
             File samtoolsDepthConvertedFile = new File(outputDirectory,
                     bamFile.getName().replace(".bam", String.format(".depth.v%s.txt", listVersion)));
             builder.addArgument(SAMToolsDepthToGATKDOCFormatConverterCLI.INPUT, samtoolsDepthFile.getAbsolutePath())
                     .addArgument(SAMToolsDepthToGATKDOCFormatConverterCLI.OUTPUT, samtoolsDepthConvertedFile.getAbsolutePath())
-                    .addArgument(SAMToolsDepthToGATKDOCFormatConverterCLI.INTERVALS, allIntervalsFile.getAbsolutePath())
-                    .addArgument(SAMToolsDepthToGATKDOCFormatConverterCLI.THREADS, 8);
+                    .addArgument(SAMToolsDepthToGATKDOCFormatConverterCLI.INTERVALS, allIntervalsFile.getAbsolutePath());
             CondorJob samtoolsDepthToGATKDOCFormatConverterJob = builder.build();
             logger.info(samtoolsDepthToGATKDOCFormatConverterJob.toString());
             graph.addVertex(samtoolsDepthToGATKDOCFormatConverterJob);
